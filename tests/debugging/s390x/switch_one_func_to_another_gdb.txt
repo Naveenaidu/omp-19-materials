@@ -1,0 +1,250 @@
+(gdb) list 1
+1	#include <stdio.h>
+2	int test(int b)
+3   {                                                         
+4	  return(5+b);
+5	
+6	}
+7	
+8	void main()
+9	{                                                       
+10	
+(gdb) 
+11		int a = test(5);                                  
+12		printf("%d",a);
+13	}							   
+14	
+
+(gdb) r
+Starting program: /home/naveen/omp/tests/only_main/switch_one_func_to_another 
+Missing separate debuginfos, use: dnf debuginfo-install glibc-2.28-30.fc29.s390x
+
+Breakpoint 1, main () at switch_one_func_to_another.c:11
+11		int a = test(5);                                  
+=> 0x00000000010005b0 <main+16>:	a7 29 00 05	lghi	%r2,5
+   0x00000000010005b4 <main+20>:	c0 e5 ff ff ff da	brasl	%r14,0x1000568 <test>
+   0x00000000010005ba <main+26>:	b9 04 00 12	lgr	%r1,%r2
+   0x00000000010005be <main+30>:	50 10 b0 a4	st	%r1,164(%r11)
+
+(gdb) disas
+Dump of assembler code for function main:
+   0x00000000010005a0 <+0>:	stmg	%r11,%r15,88(%r15)
+   0x00000000010005a6 <+6>:	lay	%r15,-168(%r15)
+   0x00000000010005ac <+12>:	lgr	%r11,%r15
+=> 0x00000000010005b0 <+16>:	lghi	%r2,5
+   0x00000000010005b4 <+20>:	brasl	%r14,0x1000568 <test>
+   0x00000000010005ba <+26>:	lgr	%r1,%r2
+   0x00000000010005be <+30>:	st	%r1,164(%r11)
+   0x00000000010005c2 <+34>:	lgf	%r1,164(%r11)
+   0x00000000010005c8 <+40>:	lgr	%r3,%r1
+   0x00000000010005cc <+44>:	larl	%r2,0x1000698
+   0x00000000010005d2 <+50>:	brasl	%r14,0x1000440 <printf@plt>
+   0x00000000010005d8 <+56>:	nopr
+   0x00000000010005da <+58>:	lmg	%r11,%r15,256(%r11)
+   0x00000000010005e0 <+64>:	br	%r14
+End of assembler dump.
+
+
+
+
+DISAS TEST
+
+(gdb) disas
+Dump of assembler code for function test:
+=> 0x0000000001000568 <+0>:	ldgr	%f2,%r11
+   0x000000000100056c <+4>:	ldgr	%f0,%r15
+   0x0000000001000570 <+8>:	lay	%r15,-168(%r15)
+   0x0000000001000576 <+14>:	lgr	%r11,%r15
+   0x000000000100057a <+18>:	lgr	%r1,%r2
+   0x000000000100057e <+22>:	st	%r1,164(%r11)
+   0x0000000001000582 <+26>:	l	%r1,164(%r11)
+   0x0000000001000586 <+30>:	ahi	%r1,5
+   0x000000000100058a <+34>:	lgfr	%r1,%r1
+   0x000000000100058e <+38>:	lgr	%r2,%r1
+   0x0000000001000592 <+42>:	lgdr	%r11,%f2
+   0x0000000001000596 <+46>:	lgdr	%r15,%f0
+   0x000000000100059a <+50>:	br	%r14
+End of assembler dump.
+
+Inside test()
+
+test (b=-35366704) at switch_one_func_to_another.c:3
+3	{                                                         
+=> 0x0000000001000568 <test+0>:	b3 c1 00 2b	ldgr	%f2,%r11
+   0x000000000100056c <test+4>:	b3 c1 00 0f	ldgr	%f0,%r15
+   0x0000000001000570 <test+8>:	e3 f0 ff 58 ff 71	lay	%r15,-168(%r15)
+   0x0000000001000576 <test+14>:	b9 04 00 bf	lgr	%r11,%r15
+   0x000000000100057a <test+18>:	b9 04 00 12	lgr	%r1,%r2
+   0x000000000100057e <test+22>:	50 10 b0 a4	st	%r1,164(%r11)
+
+(gdb) si
+0x000000000100056c	3	{                                                         
+   0x0000000001000568 <test+0>:	b3 c1 00 2b	ldgr	%f2,%r11
+=> 0x000000000100056c <test+4>:	b3 c1 00 0f	ldgr	%f0,%r15
+   0x0000000001000570 <test+8>:	e3 f0 ff 58 ff 71	lay	%r15,-168(%r15)
+   0x0000000001000576 <test+14>:	b9 04 00 bf	lgr	%r11,%r15
+   0x000000000100057a <test+18>:	b9 04 00 12	lgr	%r1,%r2
+   0x000000000100057e <test+22>:	50 10 b0 a4	st	%r1,164(%r11)
+
+(gdb) si
+0x0000000001000570	3	{                                                         
+   0x0000000001000568 <test+0>:	b3 c1 00 2b	ldgr	%f2,%r11
+   0x000000000100056c <test+4>:	b3 c1 00 0f	ldgr	%f0,%r15
+=> 0x0000000001000570 <test+8>:	e3 f0 ff 58 ff 71	lay	%r15,-168(%r15)
+   0x0000000001000576 <test+14>:	b9 04 00 bf	lgr	%r11,%r15
+   0x000000000100057a <test+18>:	b9 04 00 12	lgr	%r1,%r2
+   0x000000000100057e <test+22>:	50 10 b0 a4	st	%r1,164(%r11)
+(gdb) 
+0x0000000001000576	3	{                                                         
+   0x0000000001000568 <test+0>:	b3 c1 00 2b	ldgr	%f2,%r11
+   0x000000000100056c <test+4>:	b3 c1 00 0f	ldgr	%f0,%r15
+   0x0000000001000570 <test+8>:	e3 f0 ff 58 ff 71	lay	%r15,-168(%r15)
+=> 0x0000000001000576 <test+14>:	b9 04 00 bf	lgr	%r11,%r15
+   0x000000000100057a <test+18>:	b9 04 00 12	lgr	%r1,%r2
+   0x000000000100057e <test+22>:	50 10 b0 a4	st	%r1,164(%r11)
+(gdb) 
+0x000000000100057a	3	{                                                         
+   0x0000000001000568 <test+0>:	b3 c1 00 2b	ldgr	%f2,%r11
+   0x000000000100056c <test+4>:	b3 c1 00 0f	ldgr	%f0,%r15
+   0x0000000001000570 <test+8>:	e3 f0 ff 58 ff 71	lay	%r15,-168(%r15)
+   0x0000000001000576 <test+14>:	b9 04 00 bf	lgr	%r11,%r15
+=> 0x000000000100057a <test+18>:	b9 04 00 12	lgr	%r1,%r2
+   0x000000000100057e <test+22>:	50 10 b0 a4	st	%r1,164(%r11)
+(gdb) 
+0x000000000100057e	3	{                                                         
+   0x0000000001000568 <test+0>:	b3 c1 00 2b	ldgr	%f2,%r11
+   0x000000000100056c <test+4>:	b3 c1 00 0f	ldgr	%f0,%r15
+   0x0000000001000570 <test+8>:	e3 f0 ff 58 ff 71	lay	%r15,-168(%r15)
+   0x0000000001000576 <test+14>:	b9 04 00 bf	lgr	%r11,%r15
+   0x000000000100057a <test+18>:	b9 04 00 12	lgr	%r1,%r2
+=> 0x000000000100057e <test+22>:	50 10 b0 a4	st	%r1,164(%r11)
+
+4	  return(5+b);
+=> 0x0000000001000582 <test+26>:	58 10 b0 a4	l	%r1,164(%r11)
+   0x0000000001000586 <test+30>:	a7 1a 00 05	ahi	%r1,5
+   0x000000000100058a <test+34>:	b9 14 00 11	lgfr	%r1,%r1
+
+(gdb) 
+0x0000000001000586	4	  return(5+b);
+   0x0000000001000582 <test+26>:	58 10 b0 a4	l	%r1,164(%r11)
+=> 0x0000000001000586 <test+30>:	a7 1a 00 05	ahi	%r1,5
+   0x000000000100058a <test+34>:	b9 14 00 11	lgfr	%r1,%r1
+
+(gdb) 
+0x000000000100058a	4	  return(5+b);
+   0x0000000001000582 <test+26>:	58 10 b0 a4	l	%r1,164(%r11)
+   0x0000000001000586 <test+30>:	a7 1a 00 05	ahi	%r1,5
+=> 0x000000000100058a <test+34>:	b9 14 00 11	lgfr	%r1,%r1
+
+
+(gdb) si
+6	}
+=> 0x000000000100058e <test+38>:	b9 04 00 21	lgr	%r2,%r1
+   0x0000000001000592 <test+42>:	b3 cd 00 b2	lgdr	%r11,%f2
+   0x0000000001000596 <test+46>:	b3 cd 00 f0	lgdr	%r15,%f0
+   0x000000000100059a <test+50>:	07 fe	br	%r14
+   0x000000000100059c:	07 07	nopr	%r7
+   0x000000000100059e:	07 07	nopr	%r7
+
+(gdb) 
+0x0000000001000592	6	}
+   0x000000000100058e <test+38>:	b9 04 00 21	lgr	%r2,%r1
+=> 0x0000000001000592 <test+42>:	b3 cd 00 b2	lgdr	%r11,%f2
+   0x0000000001000596 <test+46>:	b3 cd 00 f0	lgdr	%r15,%f0
+   0x000000000100059a <test+50>:	07 fe	br	%r14
+   0x000000000100059c:	07 07	nopr	%r7
+   0x000000000100059e:	07 07	nopr	%r7
+
+(gdb) 
+0x0000000001000596 in test (b=682904) at switch_one_func_to_another.c:6
+6	}
+   0x000000000100058e <test+38>:	b9 04 00 21	lgr	%r2,%r1
+   0x0000000001000592 <test+42>:	b3 cd 00 b2	lgdr	%r11,%f2
+=> 0x0000000001000596 <test+46>:	b3 cd 00 f0	lgdr	%r15,%f0
+   0x000000000100059a <test+50>:	07 fe	br	%r14
+   0x000000000100059c:	07 07	nopr	%r7
+   0x000000000100059e:	07 07	nopr	%r7
+
+(gdb) 
+0x000000000100059a in test (b=5) at switch_one_func_to_another.c:6
+6	}
+   0x000000000100058e <test+38>:	b9 04 00 21	lgr	%r2,%r1
+   0x0000000001000592 <test+42>:	b3 cd 00 b2	lgdr	%r11,%f2
+   0x0000000001000596 <test+46>:	b3 cd 00 f0	lgdr	%r15,%f0
+=> 0x000000000100059a <test+50>:	07 fe	br	%r14
+   0x000000000100059c:	07 07	nopr	%r7
+   0x000000000100059e:	07 07	nopr	%r7
+
+
+(gdb) 
+0x00000000010005ba in main () at switch_one_func_to_another.c:11
+11		int a = test(5);                                  
+   0x00000000010005b0 <main+16>:	a7 29 00 05	lghi	%r2,5
+   0x00000000010005b4 <main+20>:	c0 e5 ff ff ff da	brasl	%r14,0x1000568 <test>
+=> 0x00000000010005ba <main+26>:	b9 04 00 12	lgr	%r1,%r2
+   0x00000000010005be <main+30>:	50 10 b0 a4	st	%r1,164(%r11)
+
+(gdb) 
+0x00000000010005be	11		int a = test(5);                                  
+   0x00000000010005b0 <main+16>:	a7 29 00 05	lghi	%r2,5
+   0x00000000010005b4 <main+20>:	c0 e5 ff ff ff da	brasl	%r14,0x1000568 <test>
+   0x00000000010005ba <main+26>:	b9 04 00 12	lgr	%r1,%r2
+=> 0x00000000010005be <main+30>:	50 10 b0 a4	st	%r1,164(%r11)
+
+
+(gdb) 
+12		printf("%d",a);
+=> 0x00000000010005c2 <main+34>:	e3 10 b0 a4 00 14	lgf	%r1,164(%r11)
+   0x00000000010005c8 <main+40>:	b9 04 00 31	lgr	%r3,%r1
+   0x00000000010005cc <main+44>:	c0 20 00 00 00 66	larl	%r2,0x1000698
+   0x00000000010005d2 <main+50>:	c0 e5 ff ff ff 37	brasl	%r14,0x1000440 <printf@plt>
+
+(gdb) 
+0x00000000010005c8	12		printf("%d",a);
+   0x00000000010005c2 <main+34>:	e3 10 b0 a4 00 14	lgf	%r1,164(%r11)
+=> 0x00000000010005c8 <main+40>:	b9 04 00 31	lgr	%r3,%r1
+   0x00000000010005cc <main+44>:	c0 20 00 00 00 66	larl	%r2,0x1000698
+   0x00000000010005d2 <main+50>:	c0 e5 ff ff ff 37	brasl	%r14,0x1000440 <printf@plt>
+
+(gdb) ni
+0x00000000010005cc	12		printf("%d",a);
+   0x00000000010005c2 <main+34>:	e3 10 b0 a4 00 14	lgf	%r1,164(%r11)
+   0x00000000010005c8 <main+40>:	b9 04 00 31	lgr	%r3,%r1
+=> 0x00000000010005cc <main+44>:	c0 20 00 00 00 66	larl	%r2,0x1000698
+   0x00000000010005d2 <main+50>:	c0 e5 ff ff ff 37	brasl	%r14,0x1000440 <printf@plt>
+
+(gdb) 
+0x00000000010005d2	12		printf("%d",a);
+   0x00000000010005c2 <main+34>:	e3 10 b0 a4 00 14	lgf	%r1,164(%r11)
+   0x00000000010005c8 <main+40>:	b9 04 00 31	lgr	%r3,%r1
+   0x00000000010005cc <main+44>:	c0 20 00 00 00 66	larl	%r2,0x1000698
+=> 0x00000000010005d2 <main+50>:	c0 e5 ff ff ff 37	brasl	%r14,0x1000440 <printf@plt>
+
+(gdb) 
+13	}							   
+=> 0x00000000010005d8 <main+56>:	07 00	nopr
+   0x00000000010005da <main+58>:	eb bf b1 00 00 04	lmg	%r11,%r15,256(%r11)
+   0x00000000010005e0 <main+64>:	07 fe	br	%r14
+(gdb) 
+0x00000000010005da	13	}							   
+   0x00000000010005d8 <main+56>:	07 00	nopr
+=> 0x00000000010005da <main+58>:	eb bf b1 00 00 04	lmg	%r11,%r15,256(%r11)
+   0x00000000010005e0 <main+64>:	07 fe	br	%r14
+
+(gdb) 
+0x00000000010005e0	13	}							   
+   0x00000000010005d8 <main+56>:	07 00	nopr
+   0x00000000010005da <main+58>:	eb bf b1 00 00 04	lmg	%r11,%r15,256(%r11)
+=> 0x00000000010005e0 <main+64>:	07 fe	br	%r14
+
+(gdb) 
+0x000003fffdd241a2 in __libc_start_main () from /lib64/libc.so.6
+=> 0x000003fffdd241a2 <__libc_start_main+266>:	b9 14 00 22	lgfr	%r2,%r2
+
+(gdb) ni
+0x000003fffdd241a6 in __libc_start_main () from /lib64/libc.so.6
+=> 0x000003fffdd241a6 <__libc_start_main+270>:	c0 e5 00 00 e7 65	brasl	%r14,0x3fffdd41070 <exit>
+
+(gdb) continue
+Continuing.
+10[Inferior 1 (process 34139) exited with code 02]

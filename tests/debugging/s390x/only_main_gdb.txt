@@ -1,0 +1,23 @@
+(gdb) list 1
+1	#include <stdio.h>
+2	
+3	void main(){
+4	int i=4;	
+5	}
+(gdb) b main
+
+Breakpoint 1, main () at only_main.c:4
+4	int i=4;	
+
+(gdb) disas
+Dump of assembler code for function main:
+   0x00000000010004f8 <+0>:		ldgr	%f2,%r11
+   0x00000000010004fc <+4>:		ldgr	%f0,%r15
+   0x0000000001000500 <+8>:		lay		%r15,-168(%r15)
+   0x0000000001000506 <+14>:	lgr		%r11,%r15
+=> 0x000000000100050a <+18>:	mvhi	164(%r11),4
+   0x0000000001000510 <+24>:	nopr
+   0x0000000001000512 <+26>:	lgdr	%r11,%f2
+   0x0000000001000516 <+30>:	lgdr	%r15,%f0
+   0x000000000100051a <+34>:	br	%r14
+End of assembler dump.
