@@ -11,12 +11,12 @@ Eg: `ldgr	%f2, %r11`
 
 ### LGR - Load GR From GR
 
-Syntax: `LGF <register1>, <register2>`
+Syntax: `LGR <register1>, <register2>`
 
 The second operand is placed at the first-operand location. The second operand 
 is in a general register, and the first operand is also in general register.
 
-Eg: `ldgr	%r11, %r15`
+Eg: `ldr	%r11, %r15`
 
 In the above example, the value present in `r15` is now loaded into `r11`
 
@@ -95,8 +95,7 @@ in the manual that:
 3. For MVGHI - The second operand is 12 bytes
 
 Since here the second operand is an integer, which takes up `4 bytes`
-in s390x architecture _Refer [Page 4 - Linux for zSeries: ELF ABI Supplement]
-(http://refspecs.linuxbase.org/ELF/zSeries/lzsabi0_zSeries.html#SCALAR)_ we use 
+in s390x architecture _Refer [Page 4 - Linux for zSeries: ELF ABI Supplement](http://refspecs.linuxbase.org/ELF/zSeries/lzsabi0_zSeries.html#SCALAR)_ we use 
 MVHI instead of the other alternatives.
 
 The reason we use Halfword is because _<---Please fill this, if you have idea ---- >_ 
