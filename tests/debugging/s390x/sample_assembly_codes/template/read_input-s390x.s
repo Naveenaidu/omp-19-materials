@@ -25,6 +25,12 @@ message1:
         .ascii "Enter your name:" # string, which is NOT terminated by zero
         message1len =. - message1 # first message length
 
+        # In the above instruction to find the lenght of the message1,
+        # Once the entire message1 is stored in memory, we use `.`(dot)
+        # to find the memory location where we currently are and subtract
+        # the current address from the address of the message1 label.
+        # This would give us the legth of the message
+
         .align 2                  # we need to ensure alignment for the 
 				  # larl instruction
 message2:
@@ -50,6 +56,18 @@ _start:
         larl  3,message1     # the address of the string to print me
         la    4,message1len  # the number of characters to be printed
         svc   0              # calling the Linux kernel
+
+        # In the above program sys_write syscall is called.
+        # sys_write has 3 params, that's why we load the registers
+        # param1 --> Where to write the input
+        # param2 --> The address of the string to print
+        # param3 --> The number of characters to print.
+        #
+        # We load these parameters into appropriate registers so that when
+        # sys_write is called it can use these values present in the register
+        # as parameters values.
+        # According to ELF ABI for s390x: R2 stores the first arg, R3 the second 
+        #and so on
 
         # read user input
         la    1,sys_read     # syscall number for "read"

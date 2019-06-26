@@ -226,3 +226,36 @@ of IBM mainframe computers up to a contemporary zSeries used to cause an
 interrupt to request a service from the operation system. The system routine
 providing the service is called as `SVC routine`. SVC is a specific 
 implementation of a system call.
+
+------------------------------------
+
+### LARL - Load Address Relatively Long
+
+
+-----------------------------------------
+
+### AGHI - Arithmetic Add half word immedaite (64 bits)
+
+arithmetic Add = Adding integers in normal math way
+
+------------------------------------------
+
+### NILF - Logical AND Immediate( low)
+
+In logical AND, the and operation happens bit by bit.
+
+In the above mentioned instruction `NIHL`, only the lower 32 bits of the 2nd
+operand is anded with the first operand.
+
+
+-------------------------------------------
+
+### NILL - Logical AND Immediate
+
+This ands the lower 16 bits of a number
+
+--------------------------------------------
+
+### SLGFI - Subtract Logical Immediate
+
+For SLGFI the second operand is treated as a 32-bit unsigned binary integer, and the first operand and the difference are treated as 64-bit
