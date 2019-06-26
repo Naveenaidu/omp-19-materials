@@ -216,3 +216,13 @@ The contents of the register are unchanged, and the original contents of the
 word area are lost.
 
 -----------------------------------
+
+### SVC - Supervisor Call
+
+Syntac: `SVC I`
+
+A supervisor Call instruction is a hardware instruction in System/360 family
+of IBM mainframe computers up to a contemporary zSeries used to cause an 
+interrupt to request a service from the operation system. The system routine
+providing the service is called as `SVC routine`. SVC is a specific 
+implementation of a system call.
