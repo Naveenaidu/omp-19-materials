@@ -54,7 +54,7 @@ The content present at the memory address is loaded into the register.
 
 -----------------------------------
 
-### LGM - Load Multiple 
+### LMG - Load Multiple 
 
 Syntax: `LGM <from register>, <to register>, <starting_address_to_save>`
 
